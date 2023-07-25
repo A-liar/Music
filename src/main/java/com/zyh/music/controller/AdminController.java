@@ -45,7 +45,7 @@ public class AdminController {
 
     @RequestMapping("/admin/getAvatar")
     public Result<String> getAvatar(String adminName) {
-        System.out.println("查找管理员："+adminName+"的头像");
+//        System.out.println("查找管理员："+adminName+"的头像");
         return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), "http://localhost:8848/singer/imageFile/image.jpg");
     }
 
