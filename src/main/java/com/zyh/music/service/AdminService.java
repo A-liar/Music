@@ -14,4 +14,16 @@ public interface AdminService {
     */
 
     public boolean verifyPassword(Admin admin);
+
+
+    /**
+     *
+     * @author A_liar.
+     * @date 2023/8/2 17:04
+     * @param adminName
+     * @return String
+     * @description:  查找管理员头像
+    */
+
+    public String getAdminAvatar(String adminName);
 }

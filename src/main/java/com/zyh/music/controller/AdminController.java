@@ -1,9 +1,13 @@
 package com.zyh.music.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaResult;
 import com.zyh.music.Result.Result;
 import com.zyh.music.Result.Status;
 import com.zyh.music.entity.Admin;
 import com.zyh.music.service.AdminService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @description: 管理员 controller
  */
 @RestController
+@RequestMapping("/admin")
 public class AdminController {
 
     private final AdminService adminService;
@@ -34,19 +39,47 @@ public class AdminController {
      * @description:  管理员登录
     */
 
-    @RequestMapping("/admin/login")
+    @PostMapping("/login")
     public Result<Admin> verifyPassword(Admin admin) {
         if (adminService.verifyPassword(admin)){
+//            StpUtil.login();
             return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), admin);
         }else {
             return Result.fail(Status.FAIL.getCode(), Status.FAIL.getMessage(), admin);
         }
     }
 
-    @RequestMapping("/admin/getAvatar")
-    public Result<String> getAvatar(String adminName) {
-//        System.out.println("查找管理员："+adminName+"的头像");
-        return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), "http://localhost:8848/singer/imageFile/image.jpg");
+    /**
+     *
+     * @author A_liar.
+     * @date 2023/8/2 16:53
+     * @param adminName
+     * @return Result<String>
+     * @description:  查询管理员头像
+    */
+
+    @GetMapping("/getAdminAvatar")
+    public Result<String> getAdminAvatar(String adminName) {
+        if (StpUtil.isLogin()){
+            return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), adminService.getAdminAvatar(adminName));
+        }else {
+            System.out.println("查找管理员头像失败，"+adminName+"未登录");
+            return Result.fail(Status.FAIL.getCode(), Status.FAIL.getMessage(), adminName+"头像查找失败");
+        }
     }
+
+    /**
+     *
+     * @author A_liar.
+     * @date 2023/8/2 16:54
+
+     * @return SaResult
+     * @description:  验证管理员是否登录
+    */
+
+    public SaResult isLogin() {
+        return SaResult.ok("是否登录："+ StpUtil.isLogin());
+    }
+
 
 }

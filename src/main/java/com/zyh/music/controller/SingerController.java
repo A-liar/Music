@@ -5,9 +5,7 @@ import com.zyh.music.Result.Status;
 import com.zyh.music.entity.Singer;
 import com.zyh.music.service.SingerService;
 import com.zyh.music.utils.ImageNameUtil;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -24,6 +22,7 @@ import java.util.Objects;
  * @description: 注释
  */
 @RestController
+@RequestMapping("/singer")
 public class SingerController {
 
     private final SingerService singerService;
@@ -41,7 +40,7 @@ public class SingerController {
      * @description:  添加歌手
     */
 
-    @RequestMapping("/singer/addSinger")
+    @PostMapping("/addSinger")
     public Result<Singer> addSinger(Singer singer) {
         boolean flag=singerService.addSinger(singer);
         if (flag) {
@@ -60,7 +59,7 @@ public class SingerController {
      * @description:   删除歌手
     */
 
-    @RequestMapping("/singer/deleteSinger")
+    @PostMapping("/deleteSinger")
     public Result<Singer> deleteSinger(Singer singer) {
         boolean flag=singerService.deleteSinger(singer);
         if (flag) {
@@ -79,7 +78,7 @@ public class SingerController {
      * @description:  根据主键查询歌手
     */
 
-    @RequestMapping("/singer/selectByPrimaryKey")
+    @GetMapping("/selectByPrimaryKey")
     public Result<Singer> selectByPrimaryKey(Integer id) {
         return Result.success(Status.SUCCESS.getCode(),Status.SUCCESS.getMessage(), singerService.selectByPrimary(id));
     }
@@ -93,7 +92,7 @@ public class SingerController {
      * @description:  查询所有歌手
     */
 
-    @RequestMapping("/singer/selectAllSinger")
+    @GetMapping("/selectAllSinger")
     public Result<List<Singer>> selectAllSinger(){
         return Result.success(Status.SUCCESS.getCode(),Status.SUCCESS.getMessage(), singerService.selectAllSinger());
     }
@@ -107,7 +106,7 @@ public class SingerController {
      * @description:  根据歌手姓名模糊查询
     */
 
-    @RequestMapping("/singer/selectSingerByName")
+    @GetMapping("/selectSingerByName")
     public Result<List<Singer>> selectSingerByName(String singerName) {
         return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), singerService.selectSingerByName(singerName));
     }
@@ -121,7 +120,7 @@ public class SingerController {
      * @description:  根据性别查询歌手
     */
 
-    @RequestMapping("/singer/selectSingerBySex")
+    @GetMapping("/selectSingerBySex")
     public Result<List<Singer>> selectSingerBySex(Integer sex) {
         return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), singerService.selectSingerBySex(sex));
     }
@@ -136,7 +135,7 @@ public class SingerController {
      * @description:  图片上传保存
     */
 
-    @RequestMapping("/singer/addSingerImage")
+    @PostMapping("/addSingerImage")
     public Result<String> addSingerImage(@RequestParam("file") MultipartFile multipartFile) {
 //        String folder="D:/File/Photos/MusicImage";
         String folder=System.getProperty("user.dir")+System.getProperty("file.separator")+"image"+System.getProperty("file.separator")+"singerImage"+System.getProperty("file.separator");
@@ -150,6 +149,7 @@ public class SingerController {
             multipartFile.transferTo(file);
             String imageUrl = "http://localhost:8848/singer/imageFile" + file.getName();
             System.out.println("写入磁盘之后返回图片Url："+imageUrl);
+            singerService.addOrUpdateAvatar()
             return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), imageUrl);
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,7 +166,7 @@ public class SingerController {
      * @description:  删除歌手图片
     */
 
-    @RequestMapping("/singer/deleteSingerImg")
+    @PostMapping("/deleteSingerImg")
     public Result<String> deleteSingerImg(String imgName) {
         String folder=System.getProperty("user.dir")+System.getProperty("file.separator")+"image"+System.getProperty("file.separator")+"singerImage"+System.getProperty("file.separator")+imgName.substring(38);
         File file=new File(folder);

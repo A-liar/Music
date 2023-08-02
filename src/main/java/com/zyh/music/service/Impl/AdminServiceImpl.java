@@ -1,10 +1,10 @@
 package com.zyh.music.service.Impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zyh.music.entity.Admin;
 import com.zyh.music.mapper.AdminMapper;
 import com.zyh.music.service.AdminService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,8 +19,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    @Autowired
-    private AdminMapper adminMapper;
+    private final AdminMapper adminMapper;
+
+    public AdminServiceImpl(AdminMapper adminMapper) {
+        this.adminMapper=adminMapper;
+    }
 
     /**
      * @param adminName
@@ -36,6 +39,24 @@ public class AdminServiceImpl implements AdminService {
         queryWrapper.eq("admin_name", admin.getAdminName())
                 .eq("password", admin.getPassword());
         System.out.println("验证管理员密码是否正确："+admin);
+        StpUtil.login(adminMapper.selectOne(queryWrapper).getId());
         return adminMapper.exists(queryWrapper);
     }
+
+    /**
+     * @param adminName
+     * @return String
+     * @author A_liar.
+     * @date 2023/8/2 17:04
+     * @description: 查找管理员头像
+     */
+    @Override
+    public String getAdminAvatar(String adminName) {
+        QueryWrapper<Admin> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("admin_name",adminName);
+        System.out.println("查找管理员："+adminName+" 的头像");
+        return adminMapper.selectOne(queryWrapper).getAvatar();
+    }
+
+
 }
