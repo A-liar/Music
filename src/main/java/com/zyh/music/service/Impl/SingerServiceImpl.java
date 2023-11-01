@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class SingerServiceImpl implements SingerService {
 
-    private SingerMapper singerMapper;
+    private final SingerMapper singerMapper;
 
     SingerServiceImpl(SingerMapper singerMapper) {
         this.singerMapper=singerMapper;

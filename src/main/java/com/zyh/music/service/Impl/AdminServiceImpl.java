@@ -2,6 +2,7 @@ package com.zyh.music.service.Impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.zyh.music.entity.Admin;
 import com.zyh.music.mapper.AdminMapper;
 import com.zyh.music.service.AdminService;
@@ -38,7 +39,7 @@ public class AdminServiceImpl implements AdminService {
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("admin_name", admin.getAdminName())
                 .eq("password", admin.getPassword());
-        System.out.println("验证管理员密码是否正确："+admin);
+        System.out.println("AdminServiceImpl=====>>verifyPassword=====>验证管理员密码是否正确："+admin);
         StpUtil.login(adminMapper.selectOne(queryWrapper).getId());
         return adminMapper.exists(queryWrapper);
     }
@@ -54,8 +55,43 @@ public class AdminServiceImpl implements AdminService {
     public String getAdminAvatar(String adminName) {
         QueryWrapper<Admin> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("admin_name",adminName);
-        System.out.println("查找管理员："+adminName+" 的头像");
+        System.out.println("AdminServiceImpl=====>>getAdminAvatar=====>查找管理员："+adminName+" 的头像");
         return adminMapper.selectOne(queryWrapper).getAvatar();
+    }
+
+    /**
+     * @param admin
+     * @return Integer
+     * @author A_liar.
+     * @date 2023/10/31 20:33
+     * @description: 查找管理员ID
+     */
+    @Override
+    public Integer getAdminId(Admin admin) {
+        QueryWrapper<Admin> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("admin_name",admin.getAdminName());
+        System.out.println("AdminServiceImpl=====>>getAdmin=====>查找管理员ID");
+        return adminMapper.selectOne(queryWrapper).getId();
+    }
+
+    /**
+     * @param adminName
+     * @param avatar
+     * @return String
+     * @author A_liar.
+     * @date 2023/11/1 20:13
+     * @description: 更新管理员头像
+     */
+    @Override
+    public String addOrUpdateAvatar(String adminName, String avatar) {
+        UpdateWrapper<Admin> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("admin_name", adminName)
+                .set("avatar", avatar);
+        int rows = adminMapper.update(null, updateWrapper);
+        if (rows>0) {
+            return "头像更新成功。";
+        }
+        return "头像更新失败";
     }
 
 

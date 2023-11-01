@@ -26,4 +26,29 @@ public interface AdminService {
     */
 
     public String getAdminAvatar(String adminName);
+
+
+    /**
+     *
+     * @author A_liar.
+     * @date 2023/10/31 20:33
+     * @param admin
+     * @return Integer
+     * @description:  查找管理员ID
+    */
+
+    public Integer getAdminId(Admin admin);
+
+
+    /**
+     *
+     * @author A_liar.
+     * @date 2023/11/1 20:13
+     * @param adminName
+     * @param avatar
+     * @return String
+     * @description:  更新管理员头像
+    */
+
+    String  addOrUpdateAvatar(String adminName, String avatar);
 }

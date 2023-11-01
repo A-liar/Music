@@ -6,10 +6,7 @@ import com.zyh.music.Result.Result;
 import com.zyh.music.Result.Status;
 import com.zyh.music.entity.Admin;
 import com.zyh.music.service.AdminService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @projectName: music
@@ -42,7 +39,7 @@ public class AdminController {
     @PostMapping("/login")
     public Result<Admin> verifyPassword(Admin admin) {
         if (adminService.verifyPassword(admin)){
-//            StpUtil.login();
+            StpUtil.login(adminService.getAdminId(admin));
             return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), admin);
         }else {
             return Result.fail(Status.FAIL.getCode(), Status.FAIL.getMessage(), admin);
@@ -67,6 +64,28 @@ public class AdminController {
             return Result.fail(Status.FAIL.getCode(), Status.FAIL.getMessage(), adminName+"头像查找失败");
         }
     }
+
+
+    /**
+     *
+     * @author A_liar.
+     * @date 2023/11/1 20:12
+     * @param adminName
+     * @param avatar
+     * @return Result<String>
+     * @description:  更新管理员头像
+    */
+
+    @PostMapping("/addOrUpdateAvatar")
+    public Result<String> addOrUpdateAvatar(@RequestParam("adminName") String adminName,@RequestParam("avatar") String avatar) {
+        System.out.println(adminName+"==========================>"+avatar);
+        if (StpUtil.isLogin()) {
+            return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), adminService.addOrUpdateAvatar(adminName,avatar));
+        }else {
+            return Result.fail(Status.FAIL.getCode(),Status.FAIL.getMessage(), adminService.addOrUpdateAvatar(adminName,avatar));
+        }
+    }
+
 
     /**
      *

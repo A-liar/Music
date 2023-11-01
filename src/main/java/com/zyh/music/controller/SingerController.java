@@ -147,9 +147,8 @@ public class SingerController {
         }
         try {
             multipartFile.transferTo(file);
-            String imageUrl = "http://localhost:8848/singer/imageFile" + file.getName();
+            String imageUrl = "http://localhost:8848/singer/imageFile/" + file.getName();
             System.out.println("写入磁盘之后返回图片Url："+imageUrl);
-            singerService.addOrUpdateAvatar()
             return Result.success(Status.SUCCESS.getCode(), Status.SUCCESS.getMessage(), imageUrl);
         } catch (Exception e) {
             e.printStackTrace();
