@@ -1,2 +1,2 @@
 # Music
-There is noting.
+There is nothing.
